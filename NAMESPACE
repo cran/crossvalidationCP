@@ -1,0 +1,8 @@
+
+importFrom(stats, rnorm)
+
+export(crossvalidationCP, VfoldCV, COPPS, CV1, CVmod)
+
+export(convertSingleParam, optimalPartitioning, pelt, binseg, wbs, smuce, fdrseg)
+
+export(criterionL2loss, criterionL1loss, criterionMod)
