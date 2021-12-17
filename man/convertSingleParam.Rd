@@ -22,7 +22,7 @@ a function that can be passed to the argument \code{estimator} in the cross-vali
 }
 
 \references{
-Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. In preparation.
+Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. \emph{arXiv:2112.03220}.
 }
 
 \examples{

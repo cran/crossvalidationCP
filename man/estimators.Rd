@@ -49,7 +49,7 @@ For \code{optimalPartitioning} and \code{wbs} a list of length \code{length(para
 }
 
 \references{
-Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. In preparation.
+Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. \emph{arXiv:2112.03220}.
 
 Jackson, B., Scargle, J. D., Barnes, D., Arabhi, S., Alt, A., Gioumousis, P., Gwin, E., Sangtrakulcharoen, P., Tan, L., Tsai, T. T. (2005) An Algorithm for optimal partitioning of data on an interval. \emph{IEEE Signal Processing Letters}, \bold{12}(2), 105--108.
 

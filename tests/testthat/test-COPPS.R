@@ -41,17 +41,17 @@ test_that("fit is correct", {
   testY <- rnorm(100)
   ret <- CV1(Y = testY, output = "fit")$fit
   compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 0L)[[1]], length(testY)))
-  expect_identical(ret, compare)
+  expect_equal(ret, compare)
   
   testY <- c(rnorm(50), rnorm(50, 5))
   ret <- CVmod(Y = testY, output = "fit")$fit
   compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 1L)[[1]], length(testY)))
-  expect_identical(ret, compare)
+  expect_equal(ret, compare)
   
   testY <- c(rnorm(50), rnorm(50, 5), rnorm(50), rnorm(50, 5))
   ret <- COPPS(Y = testY, output = "fit")$fit
   compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 3L)[[1]], length(testY)))
-  expect_identical(ret, compare)
+  expect_equal(ret, compare)
 })
 
 test_that("CV is correct", {
@@ -61,17 +61,17 @@ test_that("CV is correct", {
   ret <- COPPS(Y = testY, output = "detailed")$CV
   compare <- criterionL2loss(testset = testY[0:49 * 2 + 1], estset = testY[0:49 * 2 + 2]) +
     criterionL2loss(testset = testY[0:49 * 2 + 2], estset = testY[0:49 * 2 + 1])
-  expect_identical(ret[1], compare)
+  expect_equal(ret[1], compare)
   
   ret <- CV1(Y = testY, output = "detailed")$CV
   compare <- criterionL1loss(testset = testY[0:49 * 2 + 1], estset = testY[0:49 * 2 + 2]) +
     criterionL1loss(testset = testY[0:49 * 2 + 2], estset = testY[0:49 * 2 + 1])
-  expect_identical(ret[1], compare)
+  expect_equal(ret[1], compare)
   
   ret <- CVmod(Y = testY, output = "detailed")$CV
   compare <- criterionMod(testset = rev(testY[0:49 * 2 + 1]), estset = testY[0:49 * 2 + 2]) +
     criterionMod(testset = testY[0:49 * 2 + 2], estset = testY[0:49 * 2 + 1])
-  expect_identical(ret[1], compare)
+  expect_equal(ret[1], compare)
   
   ret <- COPPS(Y = testY, output = "detailed")$CV
   # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
@@ -81,7 +81,7 @@ test_that("CV is correct", {
   compare <- compare +
     criterionL2loss(testset = testY[0:23 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionL2loss(testset = testY[24:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
-  expect_identical(ret[2], compare)
+  expect_equal(ret[2], compare)
   
   ret <- CV1(Y = testY, output = "detailed")$CV
   # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
@@ -91,7 +91,7 @@ test_that("CV is correct", {
   compare <- compare +
     criterionL1loss(testset = testY[0:23 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionL1loss(testset = testY[24:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
-  expect_identical(ret[2], compare)
+  expect_equal(ret[2], compare)
   
   ret <- CVmod(Y = testY, output = "detailed")$CV
   # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
@@ -184,7 +184,7 @@ test_that("estimator is tested and works", {
   ret <- CV1(Y = testY, estimator = pelt, output = "detailed", param = list("SIC", 1e9))
   retCompare <- pelt(Y = testY, param = list("SIC", 1e9))
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- pelt(Y = testY[0:24 * 2 + 1], param = "SIC")
   # 13 == compareEst1$cps[[1]] -> 25
@@ -194,13 +194,13 @@ test_that("estimator is tested and works", {
     criterionL1loss(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionL1loss(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[1]][[1]]) +
     criterionL1loss(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   
   ret <- COPPS(Y = testY, estimator = binseg, output = "detailed", param = list("SIC", 1e9))
   retCompare <- binseg(Y = testY, param = list("SIC", 1e9))
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- binseg(Y = testY[0:24 * 2 + 1], param = "SIC")
   # 13 == compareEst1$cps[[1]] -> 25
@@ -210,7 +210,7 @@ test_that("estimator is tested and works", {
     criterionL2loss(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionL2loss(testset = testY[0:11 * 2 + 1], value = compareEst2$value[[1]][[1]]) +
     criterionL2loss(testset = testY[12:24 * 2 + 1], value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   ret <- CVmod(Y = 1:100, estimator = binseg,
                            param = list(list(penalty = "SIC", Q = 5), list(penalty = "SIC", Q = 20),
@@ -221,7 +221,7 @@ test_that("estimator is tested and works", {
   ret <- CVmod(Y = testY, estimator = smuce, output = "detailed", param = list(0.01, 0.05, 0.5))
   retCompare <- smuce(Y = testY, param = 0.01)
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- smuce(Y = testY[0:24 * 2 + 1], param = 0.01)
   # 10, 13 == compareEst1$cps[[1]] -> 19, 25
@@ -232,7 +232,7 @@ test_that("estimator is tested and works", {
     criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[3]]) + 
     criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[1]][[1]]) +
     criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   
   set.seed(3955L)
@@ -240,7 +240,7 @@ test_that("estimator is tested and works", {
   ret <- CVmod(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05))
   retCompare <- fdrseg(Y = testY, param = 0.01)
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- fdrseg(Y = testY[0:24 * 2 + 1], param = 0.01)
   # 13 == compareEst1$cps[[1]] -> 25
@@ -250,12 +250,12 @@ test_that("estimator is tested and works", {
     criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[3]][[1]]) +
     criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[3]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   
   ret <- COPPS(Y = testY, estimator = wbs, output = "detailed", param = list(1.0, 1.3))
   compare <- list(cps = c(0, wbs(Y = testY, param = list(1.3, 1, 0.5))[[2]], length(testY)))
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   ret <- COPPS(Y = testY, output = "detailed", estimator = wbs, param = list(1.3, 1.5))$CV
   # 13 == wbs(Y = testY[0:24 * 2 + 1], param = 1.3)[[1]] -> 25
@@ -265,7 +265,7 @@ test_that("estimator is tested and works", {
   compare <- compare +
     criterionL2loss(testset = testY[0:11 * 2 + 1], estset = testY[0:11 * 2 + 2]) +
     criterionL2loss(testset = testY[12:24 * 2 + 1], estset = testY[12:24 * 2 + 2])
-  expect_identical(ret[2], compare)
+  expect_equal(ret[2], compare)
 })
 
 test_that("... is tested and works", {

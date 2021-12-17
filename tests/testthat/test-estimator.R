@@ -42,13 +42,13 @@ test_that("optimalPartitioning is working", {
 test_that("pre-implemented change-point methods are working", {
   expect_identical(pelt(c(rep(0, 50), rep(1, 50)), param = list(0.5, "MBIC", 0.9)),
                    list(cps = list(50L, 50L, 50L), value = list(list(0, 1), list(0, 1), list(0, 1))))
-  expect_identical(pelt(c(rep(0, 8), rep(1, 58)), param = list(0.5, "MBIC", 0.9), minseglen = 10),
+  expect_equal(pelt(c(rep(0, 8), rep(1, 58)), param = list(0.5, "MBIC", 0.9), minseglen = 10),
                    list(cps = list(10L, integer(0), 10L), value = list(list(0.2, 1), list(mean(c(rep(0, 8), rep(1, 58)))),
                                                                        list(0.2, 1))))
   
   expect_identical(binseg(c(rep(0, 50), rep(1, 50)), param = list(0.5, "MBIC", 0.9)),
                    list(cps = list(50, 50, 50), value = list(list(0, 1), list(0, 1), list(0, 1))))
-  expect_identical(binseg(c(rep(0, 8), rep(1, 58)), param = list(0.5, "MBIC", 0.9), minseglen = 9),
+  expect_equal(binseg(c(rep(0, 8), rep(1, 58)), param = list(0.5, "MBIC", 0.9), minseglen = 9),
                    list(cps = list(10, numeric(0), 10), value = list(list(0.2, 1), list(mean(c(rep(0, 8), rep(1, 58)))),
                                                                      list(0.2, 1))))
   

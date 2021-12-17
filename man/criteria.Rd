@@ -33,7 +33,7 @@ criterionL2loss(testset, estset, value = NULL, ...)
 }
 
 \references{
-Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. In preparation.
+Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. \emph{arXiv:2112.03220}.
 }
 
 \examples{

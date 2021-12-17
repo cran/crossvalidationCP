@@ -58,7 +58,7 @@ test_that("CV is correct", {
     criterionL1loss(testset = testY[0:19 * 5 + 3], estset = testY[-(0:19 * 5 + 3)]) +
     criterionL1loss(testset = testY[0:19 * 5 + 4], estset = testY[-(0:19 * 5 + 4)]) +
     criterionL1loss(testset = testY[0:19 * 5 + 5], estset = testY[-(0:19 * 5 + 5)])
-  expect_identical(ret[1], compare)
+  expect_equal(ret[1], compare)
   
   ret <- crossvalidationCP(Y = testY, output = "detailed", folds = 2)$CV
   # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
@@ -68,7 +68,7 @@ test_that("CV is correct", {
   compare <- compare +
     criterionL1loss(testset = testY[0:22 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionL1loss(testset = testY[23:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
-  expect_identical(ret[2], compare)
+  expect_equal(ret[2], compare)
 })
 
 test_that("param is tested and works", {
@@ -136,7 +136,7 @@ test_that("folds is tested and works", {
   compare <- criterionL1loss(testset = testY[c(3, 5, 8, 9, 12, 16, 20, 25, 30)], 
                              estset = (1:32)[-c(3, 5, 8, 9, 12, 16, 20, 25, 30)]) +
     criterionL1loss(testset = testY[c(36, 39, 43, 50)], estset = c((33:50)[-c(36, 39, 43, 50) + 32], rep(50, 50)))
-  expect_identical(ret$CV[2], compare)
+  expect_equal(ret$CV[2], compare)
 })
 
 test_that("estimator is tested and works", {
@@ -205,13 +205,13 @@ test_that("estimator is tested and works", {
     criterionL1loss(testset = testY[12:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionL1loss(testset = testY[0:11 * 2 + 1], value = compareEst2$value[[1]][[1]]) +
     criterionL1loss(testset = testY[12:24 * 2 + 1], value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   
   ret <- crossvalidationCP(Y = testY, estimator = binseg, output = "detailed", param = list("SIC", 1e9), folds = 2)
   retCompare <- binseg(Y = testY, param = list("SIC", 1e9))
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- binseg(Y = testY[0:24 * 2 + 1], param = "SIC")
   # 13 == compareEst1$cps[[1]] -> 25
@@ -221,7 +221,7 @@ test_that("estimator is tested and works", {
     criterionL1loss(testset = testY[12:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionL1loss(testset = testY[0:11 * 2 + 1], value = compareEst2$value[[1]][[1]]) +
     criterionL1loss(testset = testY[12:24 * 2 + 1], value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   ret <- crossvalidationCP(Y = 1:100, estimator = binseg,
                            param = list(list(penalty = "SIC", Q = 5), list(penalty = "SIC", Q = 20),
@@ -232,7 +232,7 @@ test_that("estimator is tested and works", {
   ret <- crossvalidationCP(Y = testY, estimator = smuce, output = "detailed", param = list(0.01, 0.05, 0.5), folds = 2)
   retCompare <- smuce(Y = testY, param = 0.01)
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- smuce(Y = testY[0:24 * 2 + 1], param = 0.01)
   # 10, 13 == compareEst1$cps[[1]] -> 19, 25
@@ -243,7 +243,7 @@ test_that("estimator is tested and works", {
     criterionL1loss(testset = testY[12:24 * 2 + 2], value = compareEst1$value[[1]][[3]]) + 
     criterionL1loss(testset = testY[0:11 * 2 + 1], value = compareEst2$value[[1]][[1]]) +
     criterionL1loss(testset = testY[12:24 * 2 + 1], value = compareEst2$value[[1]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
 
   
   set.seed(3955L)
@@ -251,7 +251,7 @@ test_that("estimator is tested and works", {
   ret <- crossvalidationCP(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05), folds = 2)
   retCompare <- fdrseg(Y = testY, param = 0.01)
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- fdrseg(Y = testY[0:24 * 2 + 1], param = 0.01)
   # 13 == compareEst1$cps[[1]] -> 25
@@ -261,12 +261,12 @@ test_that("estimator is tested and works", {
     criterionL1loss(testset = testY[12:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
     criterionL1loss(testset = testY[0:11 * 2 + 1], value = compareEst2$value[[3]][[1]]) +
     criterionL1loss(testset = testY[12:24 * 2 + 1], value = compareEst2$value[[3]][[2]])
-  expect_identical(ret$CV[1], compare)
+  expect_equal(ret$CV[1], compare)
   
   
   ret <- crossvalidationCP(Y = testY, estimator = wbs, output = "detailed", param = list(1.0, 1.3), folds = 2)
   compare <- list(cps = c(0, wbs(Y = testY, param = list(1.3, 1, 0.5))[[2]], length(testY)))
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   ret <- crossvalidationCP(Y = testY, output = "detailed", folds = 2, estimator = wbs, param = list(1.3, 1.5))$CV
   # 13 == wbs(Y = testY[0:24 * 2 + 1], param = 1.3)[[1]] -> 25
@@ -276,7 +276,7 @@ test_that("estimator is tested and works", {
   compare <- compare +
     criterionL1loss(testset = testY[0:11 * 2 + 1], estset = testY[0:11 * 2 + 2]) +
     criterionL1loss(testset = testY[12:24 * 2 + 1], estset = testY[12:24 * 2 + 2])
-  expect_identical(ret[2], compare)
+  expect_equal(ret[2], compare)
 })
 
 
@@ -317,7 +317,7 @@ test_that("criterion is tested and works", {
     criterionMod(testset = testY[0:19 * 5 + 3], estset = testY[-(0:19 * 5 + 3)]) +
     criterionMod(testset = testY[0:19 * 5 + 4], estset = testY[-(0:19 * 5 + 4)]) +
     criterionMod(testset = testY[0:19 * 5 + 5], estset = testY[-(0:19 * 5 + 5)])
-  expect_identical(ret[1], compare)
+  expect_equal(ret[1], compare)
   
   set.seed(3955L)
   testY <- c(rnorm(25, 0, 0.1), rnorm(25, 10, 0.1))
@@ -325,7 +325,7 @@ test_that("criterion is tested and works", {
                            criterion = criterionMod)
   retCompare <- fdrseg(Y = testY, param = 0.01)
   compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_identical(ret$fit, compare)
+  expect_equal(ret$fit, compare)
   
   compareEst1 <- fdrseg(Y = testY[0:24 * 2 + 1], param = 0.01)
   # 13 == compareEst1$cps[[1]] -> 25
@@ -371,14 +371,14 @@ test_that("folds == 'COPPS' is working", {
   set.seed(1)
   testY <- rnorm(100)
   
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed"),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed"),
                    CV1(Y = testY, output = "detailed"))
 
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss),
                    COPPS(Y = testY, output = "detailed"))
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL1loss),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL1loss),
                    CV1(Y = testY, output = "detailed"))
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionMod),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionMod),
                    CVmod(Y = testY, output = "detailed"))
   
   testY <- 1:100
@@ -389,11 +389,11 @@ test_that("folds == 'COPPS' is working", {
 
   set.seed(4336L)
   testY <- c(rnorm(50), rnorm(50, 5), rnorm(50), rnorm(50, 5))
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed"),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed"),
                    CV1(Y = testY, output = "detailed"))
   
   expect_error(suppressWarnings(crossvalidationCP(Y = testY, folds = "COPPS", param = "test")))
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", param = 2L),
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", param = 2L),
                    CV1(Y = testY, output = "detailed", param = as.list(0:2)))
   
   testEstimator <- function(Y, param, ...) {NA}
@@ -402,22 +402,22 @@ test_that("folds == 'COPPS' is working", {
   expect_error(crossvalidationCP(Y = testY, folds = "COPPS", estimator = testEstimator, param = as.list(1:3)))
   testEstimator <- function(Y, param, ...) {list(cps = list(10, 25, 40),
                                                  value = list(as.list(0:1), as.list(0:1), as.list(0:1)))}
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed",
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed",
                                      estimator = testEstimator, param = as.list(1:3)),
                    CV1(Y = testY, output = "detailed", param = as.list(1:3), estimator = testEstimator))
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed",
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed",
                                      estimator = pelt, param = list("SIC", 1e9)),
                    CV1(Y = testY, output = "detailed", estimator = pelt, param = list("SIC", 1e9)))
-  expect_identical(suppressWarnings(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionMod,
+  expect_equal(suppressWarnings(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionMod,
                                                       estimator = binseg, param = list("SIC", 1e9))),
                    suppressWarnings(CVmod(Y = testY, output = "detailed", estimator = binseg, param = list("SIC", 1e9))))
   set.seed(1987654)
   ret <- crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss,
                            estimator = fdrseg, param = list(0.1, 0.2))
   set.seed(1987654)
-  expect_identical(ret, COPPS(Y = testY, output = "detailed", estimator = fdrseg, param = list(0.1, 0.2)))
+  expect_equal(ret, COPPS(Y = testY, output = "detailed", estimator = fdrseg, param = list(0.1, 0.2)))
 
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss,
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss,
                                      test = 1),
                    COPPS(Y = testY, output = "detailed"))
   expect_error(crossvalidationCP(Y = testY, folds = "COPPS", testset = 1:10))
@@ -425,7 +425,7 @@ test_that("folds == 'COPPS' is working", {
   testEstimator <- function(Y, param, testvalue, ...) {list(cps = list(10, 25, 40),
                                                             value = list(list(testvalue, testvalue),
                                                                          as.list(0:1), as.list(0:1)))}
-  expect_identical(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss,
+  expect_equal(crossvalidationCP(Y = testY, folds = "COPPS", output = "detailed", criterion = criterionL2loss,
                                      estimator = testEstimator, param = as.list(1:3), testvalue = 10),
                    COPPS(Y = testY, output = "detailed", param = as.list(1:3), estimator = testEstimator, testvalue = 10))
 })
@@ -456,16 +456,16 @@ test_that("criterion is tested and works if folds == 'COPPS'", {
   
   set.seed(969564L)
   testY <- c(rnorm(50), rnorm(50, 5), rnorm(50), rnorm(50, 5))
-  expect_identical(crossvalidationCP(Y = testY, output = "detailed", criterion = criterionL2loss, folds = "COPPS"),
+  expect_equal(crossvalidationCP(Y = testY, output = "detailed", criterion = criterionL2loss, folds = "COPPS"),
                    COPPS(Y = testY, output = "detailed"))
   
   testY <- rnorm(100)
-  expect_identical(crossvalidationCP(Y = testY, output = "detailed", criterion = criterionMod, folds = "COPPS"),
+  expect_equal(crossvalidationCP(Y = testY, output = "detailed", criterion = criterionMod, folds = "COPPS"),
                   CVmod(Y = testY, output = "detailed"))
   
   set.seed(3955L)
   testY <- c(rnorm(25, 0, 0.1), rnorm(25, 10, 0.1))
-  expect_identical(crossvalidationCP(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05),
+  expect_equal(crossvalidationCP(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05),
                                      folds = "COPPS", criterion = criterionMod),
                    CVmod(Y = testY, output = "detailed", estimator = fdrseg, param = list(0.01, 0.05)))
 })
@@ -484,20 +484,20 @@ test_that("VfoldCV is working", {
                    crossvalidationCP(Y = testY, output = "detailed"))
   
   expect_error(VfoldCV(Y = testY, output = c("param", "fit")))
-  expect_identical(VfoldCV(Y = testY, output = "detailed")$param,
+  expect_equal(VfoldCV(Y = testY, output = "detailed")$param,
                    crossvalidationCP(Y = testY))
   
   set.seed(9653L)
   testY <- c(rnorm(50), rnorm(50, 5), rnorm(50), rnorm(50, 5))
-  expect_identical(VfoldCV(Y = testY, output = "detailed"),
+  expect_equal(VfoldCV(Y = testY, output = "detailed"),
                    crossvalidationCP(Y = testY, output = "detailed"))
   
   expect_error(suppressWarnings(VfoldCV(Y = testY, Kmax = "test")))
-  expect_identical(VfoldCV(Y = testY, output = "detailed", Kmax = 2L),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", Kmax = 2L),
                    crossvalidationCP(Y = testY, output = "detailed", param = as.list(0:2)))
   
   expect_error(VfoldCV(Y = testY, V = matrix(1:4, 2, 2)))
-  expect_identical(VfoldCV(Y = testY, output = "detailed", V = 2L),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", V = 2L),
                    crossvalidationCP(Y = testY, output = "detailed", folds = 2L))
   
   testEstimator <- function(Y, param, ...) {as.list(rep(5, 7))}
@@ -505,17 +505,17 @@ test_that("VfoldCV is working", {
   
   testEstimator <- function(Y, param, ...) {list(cps = list(10, 25, 40),
                                                  value = list(as.list(0:1), as.list(0:1), as.list(0:1)))}
-  expect_identical(VfoldCV(Y = testY, output = "detailed", V = 2L, Kmax = 2L, estimator = testEstimator),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", V = 2L, Kmax = 2L, estimator = testEstimator),
                    crossvalidationCP(Y = testY, output = "detailed", folds = 2L, param = 2L, estimator = testEstimator))
   
   testCriterion <- function(testset, estset, value, ...) {1:2}
   expect_warning(VfoldCV(Y = testY, criterion = testCriterion))
-  expect_identical(VfoldCV(Y = testY, output = "detailed", criterion = criterionL2loss),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", criterion = criterionL2loss),
                    crossvalidationCP(Y = testY, output = "detailed", criterion = criterionL2loss))
-  expect_identical(VfoldCV(Y = testY, output = "detailed", V = 2L, criterion = criterionMod),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", V = 2L, criterion = criterionMod),
                    crossvalidationCP(Y = testY, output = "detailed", folds = 2L, criterion = criterionMod))
   
-  expect_identical(VfoldCV(Y = testY, output = "detailed", test = 1L),
+  expect_equal(VfoldCV(Y = testY, output = "detailed", test = 1L),
                    crossvalidationCP(Y = testY, output = "detailed"))
   expect_error(VfoldCV(Y = testY, output = "detailed", testset = 1))
   

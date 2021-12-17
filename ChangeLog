@@ -1,0 +1,11 @@
+2021-12-15 Florian Pein, version 1.0-1
+
+  * test files: replaced many expect_identical to expect_equal (CRAN errors)
+
+  * DESCRIPTION, Rd files: added arxiv paper
+
+  * ChangeLog: added this file
+
+2021-12-06 Florian Pein, version 1.0-0
+
+  * first version (1.0) on CRAN

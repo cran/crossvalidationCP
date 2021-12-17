@@ -30,7 +30,7 @@ if \code{output == "param"}, the selected tuning parameter, i.e. an entry from \
 }
 
 \references{
-Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. In preparation.
+Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: pitfalls and solutions. \emph{arXiv:2112.03220}.
 
 Zou, C., Wang, G., and Li, R. (2020) Consistent selection of the number of change-points via sample-splitting. \emph{The Annals of Statistics}, \bold{48}(1), 413--439.
 }

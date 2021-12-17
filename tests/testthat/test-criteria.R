@@ -15,12 +15,12 @@ testCriterionMod <- function(testset, estset) {
 test_that("criterionL2loss is working", {
   testtestset <- rnorm(43)
   testestset <- rnorm(34)
-  expect_identical(criterionL2loss(testset = testtestset, estset = testestset),
+  expect_equal(criterionL2loss(testset = testtestset, estset = testestset),
                    testCriterionL2loss(testset = testtestset, estset = testestset))
   
-  expect_identical(criterionL2loss(testset = testtestset, estset = testestset, value = NULL),
+  expect_equal(criterionL2loss(testset = testtestset, estset = testestset, value = NULL),
                    testCriterionL2loss(testset = testtestset, estset = testestset))
-  expect_identical(criterionL2loss(testset = testtestset, estset = testestset, test = "s"),
+  expect_equal(criterionL2loss(testset = testtestset, estset = testestset, test = "s"),
                    testCriterionL2loss(testset = testtestset, estset = testestset))
   
   expect_identical(criterionL2loss(testset = rep(1, 10), estset = 0), 10)
@@ -33,12 +33,12 @@ test_that("criterionL2loss is working", {
 test_that("criterionL1loss is working", {
   testtestset <- rnorm(43)
   testestset <- rnorm(34)
-  expect_identical(criterionL1loss(testset = testtestset, estset = testestset),
+  expect_equal(criterionL1loss(testset = testtestset, estset = testestset),
                    testCriterionL1loss(testset = testtestset, estset = testestset))
   
-  expect_identical(criterionL1loss(testset = testtestset, estset = testestset, value = NULL),
+  expect_equal(criterionL1loss(testset = testtestset, estset = testestset, value = NULL),
                    testCriterionL1loss(testset = testtestset, estset = testestset))
-  expect_identical(criterionL1loss(testset = testtestset, estset = testestset, test = "s"),
+  expect_equal(criterionL1loss(testset = testtestset, estset = testestset, test = "s"),
                    testCriterionL1loss(testset = testtestset, estset = testestset))
   
   expect_identical(criterionL1loss(testset = rep(1, 10), estset = 0), 10)
@@ -56,9 +56,9 @@ test_that("criterionMod is working", {
   
   expect_identical(criterionMod(testset = 1, estset = 10), NaN)
   
-  expect_identical(criterionMod(testset = testtestset, estset = testestset, value = NULL),
+  expect_equal(criterionMod(testset = testtestset, estset = testestset, value = NULL),
                    testCriterionMod(testset = testtestset, estset = testestset))
-  expect_identical(criterionMod(testset = testtestset, estset = testestset, test = "s"),
+  expect_equal(criterionMod(testset = testtestset, estset = testestset, test = "s"),
                    testCriterionMod(testset = testtestset, estset = testestset))
   
   expect_identical(criterionMod(testset = rep(1, 10), estset = 0), 10)
