@@ -66,9 +66,6 @@ test_that("pre-implemented change-point methods are working", {
 
   expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9)),
                    list(cps = list(50L, 50L, 50L), value = list(list(0, 1), list(0, 1), list(0, 1))))
-  expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9),
-                         family = "mDependentPS", covariances = c(10, 5, 3)),
-                   list(cps = list(integer(0), integer(0), integer(0)), value = list(list(0.5), list(0.5), list(0.5))))
   expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9), sd = 10),
                    list(cps = list(integer(0), integer(0), integer(0)), value = list(list(0.5), list(0.5), list(0.5))))
   

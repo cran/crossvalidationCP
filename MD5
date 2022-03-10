@@ -1,5 +1,5 @@
-8f14aea67007955f9e6b3f653eb239c0 *ChangeLog
-1644408a4a30b43e4d9c9826c2cc56ff *DESCRIPTION
+c1698b53b5487342b3deff9684ceefe3 *ChangeLog
+7508b789061f8d68229f39e1a737d0a1 *DESCRIPTION
 8abc86739a15cfa6a890964af05a412a *NAMESPACE
 5cfe9266d013c3dac492a314b5c23bc9 *R/COPPS.R
 8905f2b63fa3444b581ce8c33732eca6 *R/criteria.R
@@ -16,5 +16,5 @@ eddc66bc855485b744e050a236118313 *man/crossvalidationCP-package.Rd
 0f3082cd7acadc41bb9b1899d630b581 *tests/testthat.R
 af8d4cd4c686b185d601fec69c3bcf92 *tests/testthat/test-COPPS.R
 bea186f5df5f993c083b418f7a384329 *tests/testthat/test-criteria.R
-415159252db6e09a12d8b4eb02994161 *tests/testthat/test-crossvalidationCP.R
-7cd2e00d4ebf2e81657fbb3a9e811615 *tests/testthat/test-estimator.R
+6f9a0f88a6dde43e51ac2c86975b8a98 *tests/testthat/test-crossvalidationCP.R
+db585836616e314054df510bea3c2a6c *tests/testthat/test-estimator.R

@@ -1,3 +1,7 @@
+2022-03-09 Florian Pein, version 1.0-2
+
+  * small changes to the testcode that caused errors (reported by Brian Ripley)
+
 2021-12-15 Florian Pein, version 1.0-1
 
   * test files: replaced many expect_identical to expect_equal (CRAN errors)

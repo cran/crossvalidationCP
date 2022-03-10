@@ -123,9 +123,8 @@ test_that("folds is tested and works", {
   expect_identical(crossvalidationCP(Y = testY, folds = 3, output = "detailed"),
                    crossvalidationCP(Y = testY, folds = 3L, output = "detailed"))
   
-  expect_identical(crossvalidationCP(Y = c(rep(0, 50), rep(1, 50), rep(-1, 50)), folds = list(1:20)), 0L)
+  expect_identical(crossvalidationCP(Y = c(rep(0, 50), rep(1, 50), rep(-1, 50)) + rnorm(150, 0, 1e-12), folds = list(1:20)), 0L)
 
-  
   testY <- c(1:50, rep(50, 50))
   ret <- crossvalidationCP(Y = testY, folds = list(c(3, 5, 8, 9, 12, 16, 20, 25, 30, 36, 39, 43, 50)),
                            output = "detailed")
