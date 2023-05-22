@@ -6,7 +6,7 @@
 }
 
 \usage{
-VfoldCV(Y, V = 5L, Kmax = 5L, estimator = optimalPartitioning,
+VfoldCV(Y, V = 5L, Kmax = 8L, adaptiveKmax = TRUE, tolKmax = 3L, estimator = leastSquares,
         criterion = criterionL1loss, output = c("param", "fit", "detailed"), ...) 
 }
 
@@ -14,7 +14,9 @@ VfoldCV(Y, V = 5L, Kmax = 5L, estimator = optimalPartitioning,
 \item{Y}{the observations, can be any data type that supports the function \code{\link{length}} and the operator \code{\link[=[]{[]}} and can be passed to \code{estimator} and \code{criterion}, e.g. a numeric vector or a list. Support for \code{\link[=matrix]{matrices}}, i.e. for multivariate data, is planned but not implemented so far}
 \item{V}{a single integer giving the number of folds. Ordered folds will automatically be created, i.e. fold \code{i} will be \code{seq(i, length(Y), folds)}}
 \item{Kmax}{a single integer giving maximal number of change-points}
-\item{estimator}{a function providing a local estimate. For pre-implemented estimators see \link{estimators}. The function must have the arguments \code{Y}, \code{param} and \code{...}, where \code{Y} will be a subset of the observations, \code{param} will be \code{list(0:Kmax)}, and \code{...} will be the argument \code{...} of \code{VfoldCV}. Note that \code{...} will be passed to \code{estimator} and \code{criterion}. The return value must be either a list of length \code{length(param)} with each entry containing the estimated change-point locations for the given entry in \code{param} or a list containing the named entries \code{cps} and \code{value}. In this case \code{cps} has to be a list of the estimated change-points as before and \code{value} has to be a list of the locally estimated values for each entry in \code{param}, i.e. each list entry has to be a list itself of length one entry longer than the corresponding entry in \code{cps}. The function \code{\link{convertSingleParam}} offers the conversion of an estimator allowing a single parameter into an estimator allowing multiple parameters. From the currently pre-implemented estimators only \code{\link{optimalPartitioning}} accepts \code{param == list(0:Kmax)}. Estimators that allow \code{param} to differ from \code{list(0:Kmax)} can be used in \code{\link{crossvalidationCP}}}
+\item{adaptiveKmax}{a single logical indicating whether \code{Kmax} should be chosen adaptively. If true \code{Kmax} will be double if the estimated number of change-points is not at least \code{Kmax - tolKmax}}
+\item{tolKmax}{a single integer specifiying how much the estimated number of change-points have to be smaller than \code{Kmax}}
+\item{estimator}{a function providing a local estimate. For pre-implemented estimators see \link{estimators}. The function must have the arguments \code{Y}, \code{param} and \code{...}, where \code{Y} will be a subset of the observations, \code{param} will be \code{list(0:Kmax)}, and \code{...} will be the argument \code{...} of \code{VfoldCV}. Note that \code{...} will be passed to \code{estimator} and \code{criterion}. The return value must be either a list of length \code{length(param)} with each entry containing the estimated change-point locations for the given entry in \code{param} or a list containing the named entries \code{cps} and \code{value}. In this case \code{cps} has to be a list of the estimated change-points as before and \code{value} has to be a list of the locally estimated values for each entry in \code{param}, i.e. each list entry has to be a list itself of length one entry longer than the corresponding entry in \code{cps}. The function \code{\link{convertSingleParam}} offers the conversion of an estimator allowing a single parameter into an estimator allowing multiple parameters. From the currently pre-implemented estimators only \code{\link{leastSquares}} accepts \code{param == list(0:Kmax)}. Estimators that allow \code{param} to differ from \code{list(0:Kmax)} can be used in \code{\link{crossvalidationCP}}}
 \item{criterion}{a function providing the cross-validation criterion. For pre-implemented criteria see \link{criteria}. The function must have the arguments \code{testset}, \code{estset} and \code{value}. \code{testset} and \code{estset} are the observations of one segment that are in the test and estimation set, respectively. \code{value} is the local parameter on the segment if provided by \code{estimator}, otherwise \code{NULL}. Additionally, \code{...} is possible and potentially necessary to absorb arguments, since the argument \code{...} of \code{VfoldCV} will be passed to \code{estimator} and \code{criterion}. It must return a single numeric. All return values will be summed accordingly and \code{\link{which.min}} will be called on the vector to determine the parameter with the smallest criterion. Hence some \code{NaN} values etc. are allowed}
 \item{output}{a string specifying the output, either \code{"param"}, \code{"fit"} or \code{"detailed"}. For details what they mean see \cite{Value}}
 \item{...}{additional parameters that are passed to \code{estimator} and \code{criterion}}
@@ -34,7 +36,7 @@ Pein, F., and Shah, R. D. (2021) Cross-validation for change-point regression: p
 
 \examples{
 # call with default parameters:
-# 5-fold cross-validation with absolute error loss, optimal partitioning,
+# 5-fold cross-validation with absolute error loss, least squares estimation,
 # and 0 to 5 change-points
 VfoldCV(Y = rnorm(100))
 

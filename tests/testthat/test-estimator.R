@@ -33,13 +33,17 @@ test_that("convertSingleParam is working", {
                                                         value = list(1:4, 1:4, 1:4)))
 })
 
-test_that("optimalPartitioning is working", {
+test_that("leastSquares is working", {
   set.seed(1)
-  expect_identical(optimalPartitioning(rnorm(100), c(3, 0, 1, 5)),
+  expect_identical(leastSquares(rnorm(100), c(3, 0, 1, 5)),
                    list(c(13, 14, 96), numeric(0), 96, c(66, 67, 70, 91, 96)))
 })
 
 test_that("pre-implemented change-point methods are working", {
+  set.seed(1)
+  expect_identical(optimalPartitioning(rnorm(100), c(3, 0, 1, 5)),
+                   list(c(13, 14, 96), numeric(0), 96, c(66, 67, 70, 91, 96)))
+  
   expect_identical(pelt(c(rep(0, 50), rep(1, 50)), param = list(0.5, "MBIC", 0.9)),
                    list(cps = list(50L, 50L, 50L), value = list(list(0, 1), list(0, 1), list(0, 1))))
   expect_equal(pelt(c(rep(0, 8), rep(1, 58)), param = list(0.5, "MBIC", 0.9), minseglen = 10),
@@ -64,12 +68,12 @@ test_that("pre-implemented change-point methods are working", {
   expect_identical(wbs(rnorm(100), param = list(0.9, 1, 1.3)),
                    list(c(25, 33, 43, 85, 92), c(43, 92), logical(0)))
 
-  expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9)),
-                   list(cps = list(50L, 50L, 50L), value = list(list(0, 1), list(0, 1), list(0, 1))))
-  expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9), sd = 10),
-                   list(cps = list(integer(0), integer(0), integer(0)), value = list(list(0.5), list(0.5), list(0.5))))
-  
-  set.seed(1)
-  expect_identical(fdrseg(rnorm(100) + c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9))$cps,
-                   list(49L, 49L, 49L))
+  # expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9)),
+  #                  list(cps = list(50L, 50L, 50L), value = list(list(0, 1), list(0, 1), list(0, 1))))
+  # expect_identical(smuce(c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9), sd = 10),
+  #                  list(cps = list(integer(0), integer(0), integer(0)), value = list(list(0.5), list(0.5), list(0.5))))
+  # 
+  # set.seed(1)
+  # expect_identical(fdrseg(rnorm(100) + c(rep(0, 50), rep(1, 50)), param = list(0.5, 0.1, 0.9))$cps,
+  #                  list(49L, 49L, 49L))
 })

@@ -20,6 +20,27 @@ convertSingleParam <- function(estimator) {
   }
 }
 
+leastSquares <- function(Y, param, ...) {
+  maxK <- max(c(max(as.numeric(param)), 2))
+  # fpopw::Fpsn produces an error if Kmax <= 2
+  
+  if (maxK > length(Y)) {
+    stop("least square estimator cannot be calculated for a putative number of change-points being larger than length of the number of observations")
+  }
+  
+  cps <- fpopw::Fpsn(Y, Kmax = maxK + 1)$t.est
+  
+  ret <- list()
+  for (i in seq_along(param)) {
+    if (param[[i]] == 0) {
+      ret[[i]] <- numeric(0)
+    } else {
+      ret[[i]] <- cps[param[[i]] + 1, 1:param[[i]]]
+    }
+  }
+  ret
+}
+
 optimalPartitioning <- function(Y, param, ...) {
   maxK <- max(c(max(as.numeric(param)), 2))
   # changepoint::cpt.mean produces an error if Q == 2
@@ -86,23 +107,23 @@ wbs <- function(Y, param, ...) {
   ret
 }
 
-.smuceSingleParam <- function(Y, param, ...) {
-  ret <- stepR::stepFit(Y, alpha = param, ...)
-  list(cps = ret$rightIndex[-length(ret$rightIndex)], value = as.list(ret$value))
-}
-
-smuce <- function(Y, param, ...) {
-  estimator <- convertSingleParam(.smuceSingleParam)
-  estimator(Y, param, ...)
-}
-
-.fdrsegSingleParam <- function(Y, param, ...) {
-  ret <- FDRSeg::fdrseg(Y, alpha = param, ...)
-  list(cps = ret$left[-1] - 1L, value = as.list(ret$value))
-}
-
-fdrseg <- function(Y, param, ...) {
-  estimator <- convertSingleParam(.fdrsegSingleParam)
-  estimator(Y, param, ...)
-}
+# .smuceSingleParam <- function(Y, param, ...) {
+#   ret <- stepR::stepFit(Y, alpha = param, ...)
+#   list(cps = ret$rightIndex[-length(ret$rightIndex)], value = as.list(ret$value))
+# }
+# 
+# smuce <- function(Y, param, ...) {
+#   estimator <- convertSingleParam(.smuceSingleParam)
+#   estimator(Y, param, ...)
+# }
+# 
+# .fdrsegSingleParam <- function(Y, param, ...) {
+#   ret <- FDRSeg::fdrseg(Y, alpha = param, ...)
+#   list(cps = ret$left[-1] - 1L, value = as.list(ret$value))
+# }
+# 
+# fdrseg <- function(Y, param, ...) {
+#   estimator <- convertSingleParam(.fdrsegSingleParam)
+#   estimator(Y, param, ...)
+# }
   

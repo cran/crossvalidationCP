@@ -6,7 +6,7 @@
 }
 
 \usage{
-crossvalidationCP(Y, param = 5L, folds = 5L, estimator = optimalPartitioning,
+crossvalidationCP(Y, param = 5L, folds = 5L, estimator = leastSquares,
                   criterion = criterionL1loss,
                   output = c("param", "fit", "detailed"), ...)
 }
@@ -37,7 +37,7 @@ Zou, C., Wang, G., and Li, R. (2020) Consistent selection of the number of chang
 
 \examples{
 # call with default parameters:
-# 5-fold cross-validation with absolute error loss, optimal partitioning,
+# 5-fold cross-validation with absolute error loss, least squares estimation,
 # and possible parameters being 0 to 5 change-points
 # a simpler access to it is offered by VfoldCV()
 crossvalidationCP(Y = rnorm(100))
@@ -94,7 +94,7 @@ testCriterion <- function(testset, estset, value = NULL, ...) {
 identical(crossvalidationCP(Y = Y, criterion = testCriterion, output = "detailed"),
           crossvalidationCP(Y = Y, output = "detailed"))
           
-# PELT as a local estimator instead of optimal partitioning
+# PELT as a local estimator instead of least squares estimation
 # param must contain parameters that are acceptable for the given estimator
 crossvalidationCP(Y = Y, estimator = pelt, output = "detailed",
                   param = list("SIC", "MBIC", 3 * log(length(Y))))

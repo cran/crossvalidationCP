@@ -1,3 +1,12 @@
+2023-05-22 Florian Pein, version 1.1
+
+  * VfoldCV: added adaptive choice of Kmax
+
+  * estimator.R: replaced changepoint::cpt.mean by fpopw::Fpsn for faster runtime (suggested by anonymous referee)
+                 renamed optimalPartitioning into leastSquares, optimalPartitioning still available for backwards compatibility
+  
+  * temoparily disabled smuce and fdrseg (archived on CRAN)
+  
 2022-03-09 Florian Pein, version 1.0-2
 
   * small changes to the testcode that caused errors (reported by Brian Ripley)

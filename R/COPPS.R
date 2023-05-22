@@ -1,5 +1,5 @@
 
-.COPPS <- function(Y, param = 5L, estimator = optimalPartitioning, criterion = criterionL2loss,
+.COPPS <- function(Y, param = 5L, estimator = leastSquares, criterion = criterionL2loss,
                   output = c("param", "fit", "detailed"), ...) {
   if (!is.list(param)) {
     if (is.numeric(param) && length(param) == 1) {
@@ -173,17 +173,17 @@
   ret
 }
 
-COPPS <- function(Y, param = 5L, estimator = optimalPartitioning,
+COPPS <- function(Y, param = 5L, estimator = leastSquares,
                 output = c("param", "fit", "detailed"), ...) {
   .COPPS(Y = Y, param = param, estimator = estimator, criterion = criterionL2loss, output = output, ...)
 }
 
-CV1 <- function(Y, param = 5L, estimator = optimalPartitioning,
+CV1 <- function(Y, param = 5L, estimator = leastSquares,
                 output = c("param", "fit", "detailed"), ...) {
   .COPPS(Y = Y, param = param, estimator = estimator, criterion = criterionL1loss, output = output, ...)
 }
 
-CVmod <- function(Y, param = 5L, estimator = optimalPartitioning,
+CVmod <- function(Y, param = 5L, estimator = leastSquares,
                   output = c("param", "fit", "detailed"), ...) {
   .COPPS(Y = Y, param = param, estimator = estimator, criterion = criterionMod, output = output, ...)
 }

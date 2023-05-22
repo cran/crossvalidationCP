@@ -7,11 +7,11 @@
 \description{Tuning parameters are selected by a generalised \acronym{COPPS} procedure. All functions use Order-Preserved Sample-Splitting, meaning that the folds will be the odd and even indexed observations. The three functions differ in which cross-validation criterion they are using. \code{COPPS} is the original \acronym{COPPS} procedure \cite{Zou et al. (2020)}, i.e. uses \link[=criterionL2loss]{quadratic error loss}. \code{CV1} and \code{CVmod} use \link[=criterionL1loss]{absolute error loss} and the \link[=criterionMod]{modified quadratic error loss}, respectively.}
 
 \usage{
-COPPS(Y, param = 5L, estimator = optimalPartitioning,
+COPPS(Y, param = 5L, estimator = leastSquares,
       output = c("param", "fit", "detailed"), ...)
-CV1(Y, param = 5L, estimator = optimalPartitioning,
+CV1(Y, param = 5L, estimator = leastSquares,
     output = c("param", "fit", "detailed"), ...)
-CVmod(Y, param = 5L, estimator = optimalPartitioning,
+CVmod(Y, param = 5L, estimator = leastSquares,
       output = c("param", "fit", "detailed"), ...)
 }
 
@@ -40,7 +40,7 @@ Zou, C., Wang, G., and Li, R. (2020) Consistent selection of the number of chang
 \examples{
 # call with default parameters:
 # 2-folds cross-validation with ordereded folds, absolute error loss,
-# optimal partitioning, and possible parameters being 0 to 5 change-points
+# least squares estimation, and possible parameters being 0 to 5 change-points
 CV1(Y = rnorm(100))
 # the same, but with modified error loss
 CVmod(Y = rnorm(100))
@@ -67,7 +67,7 @@ COPPS(Y = exampleY)
 # correct number of change-points when modified criterion (or absolute error loss) is used
 CVmod(Y = exampleY)
 
-# PELT as a local estimator instead of optimal partitioning
+# PELT as a local estimator instead of least squares estimation
 # param must contain parameters that are acceptable for the given estimator
 CV1(Y = Y, estimator = pelt, output = "detailed", param = list("SIC", "MBIC", 3 * log(length(Y))))
 

@@ -4,7 +4,7 @@
 
 \title{Cross-validation for change-point regression}
 
-\description{Implements the cross-validation methodology from \cite{Pein and Shah (2021)}. The approach can be customised by providing cross-validation criteria, estimators for the change-point locations and local parameters, and freely chosen folds. Pre-implemented estimators and criteria are available. It also includes our own implementation of the \acronym{COPPS} procedure \cite{Zou et al. (2020)}. By default, 5-fold cross-validation with ordered folds, absolute error loss, and optimal partitioning for estimating the change-point locations is used.
+\description{Implements the cross-validation methodology from \cite{Pein and Shah (2021)}. The approach can be customised by providing cross-validation criteria, estimators for the change-point locations and local parameters, and freely chosen folds. Pre-implemented estimators and criteria are available. It also includes our own implementation of the \acronym{COPPS} procedure \cite{Zou et al. (2020)}. By default, 5-fold cross-validation with ordered folds, absolute error loss, and least squares estimation for estimating the change-point locations is used.
 }
 
 \details{
@@ -31,7 +31,7 @@ Zou, C., Wang, G., and Li, R. (2020) Consistent selection of the number of chang
 
 \examples{
 # call with default parameters:
-# 5-fold cross-validation with absolute error loss, optimal partitioning,
+# 5-fold cross-validation with absolute error loss, least squares estimation,
 # and possible parameters being 0 to 5 change-points
 Y <- rnorm(100)
 (ret <- crossvalidationCP(Y = Y))
@@ -94,7 +94,7 @@ testCriterion <- function(testset, estset, value = NULL, ...) {
 identical(crossvalidationCP(Y = Y, criterion = testCriterion, output = "detailed"),
           crossvalidationCP(Y = Y, output = "detailed"))
 
-# PELT as a local estimator instead of optimal partitioning
+# PELT as a local estimator instead of least squares estimation
 # param must contain parameters that are acceptable for the given estimator
 crossvalidationCP(Y = Y, estimator = pelt, output = "detailed",
                   param = list("SIC", "MBIC", 3 * log(length(Y))))

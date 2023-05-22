@@ -40,17 +40,17 @@ test_that("fit is correct", {
   set.seed(4336L)
   testY <- rnorm(100)
   ret <- CV1(Y = testY, output = "fit")$fit
-  compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 0L)[[1]], length(testY)))
+  compare <- list(cps = c(0, leastSquares(Y = testY, param = 0L)[[1]], length(testY)))
   expect_equal(ret, compare)
   
   testY <- c(rnorm(50), rnorm(50, 5))
   ret <- CVmod(Y = testY, output = "fit")$fit
-  compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 1L)[[1]], length(testY)))
+  compare <- list(cps = c(0, leastSquares(Y = testY, param = 1L)[[1]], length(testY)))
   expect_equal(ret, compare)
   
   testY <- c(rnorm(50), rnorm(50, 5), rnorm(50), rnorm(50, 5))
   ret <- COPPS(Y = testY, output = "fit")$fit
-  compare <- list(cps = c(0, optimalPartitioning(Y = testY, param = 3L)[[1]], length(testY)))
+  compare <- list(cps = c(0, leastSquares(Y = testY, param = 3L)[[1]], length(testY)))
   expect_equal(ret, compare)
 })
 
@@ -74,30 +74,30 @@ test_that("CV is correct", {
   expect_equal(ret[1], compare)
   
   ret <- COPPS(Y = testY, output = "detailed")$CV
-  # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
+  # 2 == leastSquares(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
   compare <- criterionL2loss(testset = testY[0:1 * 2 + 1], estset = testY[0:1 * 2 + 2]) +
     criterionL2loss(testset = testY[2:49 * 2 + 1], estset = testY[2:49 * 2 + 2])
-  # 24 == optimalPartitioning(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
+  # 24 == leastSquares(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
   compare <- compare +
     criterionL2loss(testset = testY[0:23 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionL2loss(testset = testY[24:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
   expect_equal(ret[2], compare)
   
   ret <- CV1(Y = testY, output = "detailed")$CV
-  # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
+  # 2 == leastSquares(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
   compare <- criterionL1loss(testset = testY[0:1 * 2 + 1], estset = testY[0:1 * 2 + 2]) +
     criterionL1loss(testset = testY[2:49 * 2 + 1], estset = testY[2:49 * 2 + 2])
-  # 24 == optimalPartitioning(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
+  # 24 == leastSquares(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
   compare <- compare +
     criterionL1loss(testset = testY[0:23 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionL1loss(testset = testY[24:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
   expect_equal(ret[2], compare)
   
   ret <- CVmod(Y = testY, output = "detailed")$CV
-  # 2 == optimalPartitioning(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
+  # 2 == leastSquares(Y = testY[-(0:49 * 2 + 1)], param = 1L)[[1]] -> 4
   compare <- criterionMod(testset = rev(testY[0:1 * 2 + 1]), estset = testY[0:1 * 2 + 2]) +
     criterionMod(testset = rev(testY[2:49 * 2 + 1]), estset = testY[2:49 * 2 + 2])
-  # 24 == optimalPartitioning(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
+  # 24 == leastSquares(Y = testY[-(0:49 * 2 + 2)], param = 1L)[[1]] -> 47
   compare <- compare +
     criterionMod(testset = testY[0:23 * 2 + 2], estset = testY[0:23 * 2 + 1]) +
     criterionMod(testset = testY[24:49 * 2 + 2], estset = testY[24:49 * 2 + 1])
@@ -130,7 +130,7 @@ test_that("param is tested and works", {
 
 test_that("estimator is tested and works", {
   testY <- 1:100
-  expect_identical(COPPS(Y = testY, estimator = optimalPartitioning, output = "detailed"),
+  expect_identical(COPPS(Y = testY, estimator = leastSquares, output = "detailed"),
                    COPPS(Y = testY, output = "detailed"))
   
   expect_error(CV1(Y = testY, estimator = 1))
@@ -218,39 +218,39 @@ test_that("estimator is tested and works", {
   expect_identical(ret, list(penalty = "SIC", Q = 20))
   
   
-  ret <- CVmod(Y = testY, estimator = smuce, output = "detailed", param = list(0.01, 0.05, 0.5))
-  retCompare <- smuce(Y = testY, param = 0.01)
-  compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_equal(ret$fit, compare)
-  
-  compareEst1 <- smuce(Y = testY[0:24 * 2 + 1], param = 0.01)
-  # 10, 13 == compareEst1$cps[[1]] -> 19, 25
-  compareEst2 <- smuce(Y = testY[0:24 * 2 + 2], param = list(0.01, 0.05, 0.5))
-  # 12 == compareEst2$cps[[1]] -crossvalidationCP> 24
-  compare <- criterionMod(testset = testY[0:9 * 2 + 2], value = compareEst1$value[[1]][[1]]) +
-    criterionMod(testset = testY[10:12 * 2 + 2], value = compareEst1$value[[1]][[2]]) +
-    criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[3]]) + 
-    criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[1]][[1]]) +
-    criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[1]][[2]])
-  expect_equal(ret$CV[1], compare)
+  # ret <- CVmod(Y = testY, estimator = smuce, output = "detailed", param = list(0.01, 0.05, 0.5))
+  # retCompare <- smuce(Y = testY, param = 0.01)
+  # compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
+  # expect_equal(ret$fit, compare)
+  # 
+  # compareEst1 <- smuce(Y = testY[0:24 * 2 + 1], param = 0.01)
+  # # 10, 13 == compareEst1$cps[[1]] -> 19, 25
+  # compareEst2 <- smuce(Y = testY[0:24 * 2 + 2], param = list(0.01, 0.05, 0.5))
+  # # 12 == compareEst2$cps[[1]] -crossvalidationCP> 24
+  # compare <- criterionMod(testset = testY[0:9 * 2 + 2], value = compareEst1$value[[1]][[1]]) +
+  #   criterionMod(testset = testY[10:12 * 2 + 2], value = compareEst1$value[[1]][[2]]) +
+  #   criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[3]]) + 
+  #   criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[1]][[1]]) +
+  #   criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[1]][[2]])
+  # expect_equal(ret$CV[1], compare)
   
   
   set.seed(3955L)
   testY <- c(rnorm(25, 0, 0.1), rnorm(25, 10, 0.1))
-  ret <- CVmod(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05))
-  retCompare <- fdrseg(Y = testY, param = 0.01)
-  compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
-  expect_equal(ret$fit, compare)
-  
-  compareEst1 <- fdrseg(Y = testY[0:24 * 2 + 1], param = 0.01)
-  # 13 == compareEst1$cps[[1]] -> 25
-  compareEst2 <- fdrseg(Y = testY[0:24 * 2 + 2], param = list(0.05, 0.5, 0.01))
-  # 12 == compareEst2$cps[[1]] -> 24
-  compare <- criterionMod(testset = testY[0:12 * 2 + 2], value = compareEst1$value[[1]][[1]]) +
-    criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
-    criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[3]][[1]]) +
-    criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[3]][[2]])
-  expect_equal(ret$CV[1], compare)
+  # ret <- CVmod(Y = testY, estimator = fdrseg, output = "detailed", param = list(0.01, 0.05))
+  # retCompare <- fdrseg(Y = testY, param = 0.01)
+  # compare <- list(cps = c(0, retCompare[[1]][[1]], length(testY)), value = retCompare$value[[1]])
+  # expect_equal(ret$fit, compare)
+  # 
+  # compareEst1 <- fdrseg(Y = testY[0:24 * 2 + 1], param = 0.01)
+  # # 13 == compareEst1$cps[[1]] -> 25
+  # compareEst2 <- fdrseg(Y = testY[0:24 * 2 + 2], param = list(0.05, 0.5, 0.01))
+  # # 12 == compareEst2$cps[[1]] -> 24
+  # compare <- criterionMod(testset = testY[0:12 * 2 + 2], value = compareEst1$value[[1]][[1]]) +
+  #   criterionMod(testset = testY[13:24 * 2 + 2], value = compareEst1$value[[1]][[2]]) + 
+  #   criterionMod(testset = rev(testY[0:11 * 2 + 1]), value = compareEst2$value[[3]][[1]]) +
+  #   criterionMod(testset = rev(testY[12:24 * 2 + 1]), value = compareEst2$value[[3]][[2]])
+  # expect_equal(ret$CV[1], compare)
   
   
   ret <- COPPS(Y = testY, estimator = wbs, output = "detailed", param = list(1.0, 1.3))
@@ -297,12 +297,12 @@ test_that("... is tested and works", {
 })
 
 
-test_that("matrices are allowed for argument Y", {
-  # TODO
-  # ret <- crossvalidationCP(Y = matrix(rnorm(100), 2, 50))
-})
-
-test_that("argument Y is tested and works", {
-  # TODO
-  # crossvalidationCP(Y = as.list(rnorm(100)))
-})
+# test_that("matrices are allowed for argument Y", {
+#   # TODO
+#   # ret <- crossvalidationCP(Y = matrix(rnorm(100), 2, 50))
+# })
+# 
+# test_that("argument Y is tested and works", {
+#   # TODO
+#   # crossvalidationCP(Y = as.list(rnorm(100)))
+# })

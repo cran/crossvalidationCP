@@ -1,5 +1,5 @@
 
-crossvalidationCP <- function(Y, param = 5L, folds = 5L, estimator = optimalPartitioning,
+crossvalidationCP <- function(Y, param = 5L, folds = 5L, estimator = leastSquares,
                               criterion = criterionL1loss, output = c("param", "fit", "detailed"), ...) {
   if (length(folds) == 1 && folds == "COPPS") {
     return(.COPPS(Y = Y, param = param, estimator = estimator, criterion = criterion, output = output, ...))
@@ -10,6 +10,11 @@ crossvalidationCP <- function(Y, param = 5L, folds = 5L, estimator = optimalPart
       if (!is.integer(param)) {
         param <- as.integer(param)
       }
+      
+      if (param > length(Y) / 2) {
+        stop("maximal number of change-points have to be smaller than length(Y) / 2")
+      }
+      
       param <- as.list(0:param)
     } else {
       warning("param has to be a list or an integer of length 1, attempt converting it to a list")
@@ -137,8 +142,34 @@ crossvalidationCP <- function(Y, param = 5L, folds = 5L, estimator = optimalPart
   ret
 }
 
-VfoldCV <- function(Y, V = 5L, Kmax = 5L, estimator = optimalPartitioning,
-                    criterion = criterionL1loss, output = c("param", "fit", "detailed"), ...) {
-  crossvalidationCP(Y = Y, param = Kmax, folds = V, estimator = estimator,
-                    criterion = criterion, output = output, ...)
+VfoldCV <- function(Y, V = 5L, Kmax = 8L, adaptiveKmax = TRUE, tolKmax = 3L, 
+                    estimator = leastSquares, criterion = criterionL1loss,
+                    output = c("param", "fit", "detailed"), ...) {
+  output <- match.arg(output)
+  
+  if (adaptiveKmax) {
+    while (Kmax < length(Y) - 2) {
+      if (Kmax > length(Y) / 2 - 1) {
+        Kmax <- length(Y) / 2 - 1
+      }
+      ret <- crossvalidationCP(Y = Y, param = Kmax, folds = V, estimator = estimator,
+                               criterion = criterion, output = output, ...)
+      if (output == "param") {
+        numberCps <- ret
+      } else {
+        numberCps <- ret$param
+      }
+      
+      if (numberCps < Kmax - tolKmax) {
+        break
+      }
+      
+      Kmax <- Kmax * 2
+    }
+  } else {
+    ret <- crossvalidationCP(Y = Y, param = Kmax, folds = V, estimator = estimator,
+                             criterion = criterion, output = output, ...)
+  }
+  
+  ret
 }
